@@ -1,4 +1,0 @@
-https://www.flaticon.com/free-icon/security_6865349?term=lock&page=1&position=41&origin=search&related_id=6865349
-https://github.com/UN-GCPDS/qt-material/tree/master?tab=readme-ov-file
-https://pypi.org/project/qt-material/
-https://doc.qt.io/qtforpython-6/examples/example_widgets_mainwindows_application.html#example-widgets-mainwindows-application
