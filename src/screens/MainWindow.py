@@ -20,8 +20,8 @@ class MainWindow(QMainWindow):
     def set_position(self, x, y):
         screen = QApplication.primaryScreen()
         screen_geometry = self.screen().geometry()
-        window_width = int(screen_geometry.width() * 0.43)
-        window_height = int(screen_geometry.height() * 0.5)
+        window_width = int(screen_geometry.width() * 0.5)
+        window_height = int(screen_geometry.height() * 0.44)
         self.resize(window_width, window_height)
         self.move(x, y)
 

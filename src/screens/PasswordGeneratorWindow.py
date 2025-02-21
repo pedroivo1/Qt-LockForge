@@ -13,25 +13,10 @@ class PasswordGeneratorWindow(QWidget):
         self.title_label = QLabel('Password Generator')
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.title_label.setMaximumHeight(25)
-        # self.title_label.setStyleSheet(
-        #     """
-        #         QLabel {
-        #             font-size: 18px;
-        #             font-weight: bold;
-        #         }
-        #     """
-        # )
 
         self.char_count_selector = QSpinBox()
         self.char_count_selector.setRange(1, 1000)
-        self.char_count_selector.setValue(8)
-        # self.char_count_selector.setStyleSheet(
-        #     """
-        #         QSpinBox {
-        #             color: #fff
-        #         }
-        #     """
-        # )
+        self.char_count_selector.setValue(10)
 
         self.password_display = QTextEdit()
         self.password_display.setReadOnly(True)
@@ -96,14 +81,3 @@ class PasswordGeneratorWindow(QWidget):
 
         password = ''.join(random.choices(characters, k=length))
         self.password_display.setPlainText(password)
-
-    def show_warning(self):
-        # Exibe o aviso
-        self.warning_label.setVisible(True)
-
-        # Cria um timer para esconder o aviso após 5 segundos
-        QTimer.singleShot(5000, self.hide_warning)
-
-    def hide_warning(self):
-        # Esconde o aviso
-        self.warning_label.setVisible(False)
