@@ -2,8 +2,8 @@ from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QLabel, QHBoxLayout,
     QSpinBox, QTextEdit, QPushButton, QCheckBox,
     QMessageBox)
-from PySide6.QtGui import QFont
-from PySide6.QtCore import Qt, Slot
+from PySide6.QtGui import QClipboard
+from PySide6.QtCore import Qt, Slot, QTimer
 import random
 
 class PasswordGeneratorWindow(QWidget):
@@ -20,20 +20,29 @@ class PasswordGeneratorWindow(QWidget):
 
         self.password_display = QTextEdit()
         self.password_display.setReadOnly(True)
+        self.password_display.setFocusPolicy(Qt.NoFocus)
+
+        self.copy_button = QPushButton("Copy")
+        self.copy_button.clicked.connect(self.copy_password)
 
         self.generate_button = QPushButton("Create Password")
         self.generate_button.clicked.connect(self.create_password)
 
         self.uppercase_checkbox = QCheckBox('ABC')
         self.uppercase_checkbox.setChecked(True)
+        self.uppercase_checkbox.setFocusPolicy(Qt.NoFocus)
         self.lowercase_checkbox = QCheckBox('abc')
         self.lowercase_checkbox.setChecked(True)
+        self.lowercase_checkbox.setFocusPolicy(Qt.NoFocus)
         self.numbers_checkbox = QCheckBox('123')
         self.numbers_checkbox.setChecked(True)
+        self.numbers_checkbox.setFocusPolicy(Qt.NoFocus)
         self.symbols_checkbox = QCheckBox('#$%')
         self.symbols_checkbox.setChecked(True)
+        self.symbols_checkbox.setFocusPolicy(Qt.NoFocus)
 
         self.options_layout = QVBoxLayout()
+        self.options_layout.addWidget(self.copy_button)
         self.options_layout.addWidget(self.char_count_selector)
         self.options_layout.addWidget(self.uppercase_checkbox)
         self.options_layout.addWidget(self.lowercase_checkbox)
@@ -75,11 +84,26 @@ class PasswordGeneratorWindow(QWidget):
             characters += '!\"#$%&\'()*+,-./:;<=>?@[\]^_{|}~'  # removed this symbol: `
 
         if not characters:
-            QMessageBox.information(self, "Empty Field", "Please select at least one option.", QMessageBox.Ok, QMessageBox.Ok)
+            message = QMessageBox.information(self, "Empty Field", "Please select at least one option.", QMessageBox.Ok, QMessageBox.Ok)
+            message.setFocusPolicy(Qt.NoFocus)
             return
+
 
         password = ''.join(random.choices(characters, k=length))
         self.password_display.setPlainText(password)
+
+
+    @Slot()
+    def copy_password(self):
+        password = self.password_display.toPlainText()
+        clipboard = QClipboard(self)
+        clipboard.setText(password)
+        self.copy_button.setText('Copied')
+        QTimer.singleShot(2000, self.copy_button_reset)
+
+    def copy_button_reset(self):
+        self.copy_button.setText('Copy')
+        self.copy_button.clearFocus()
 
     def print_widget_sizes(self):
         widgets = [
@@ -92,6 +116,6 @@ class PasswordGeneratorWindow(QWidget):
             self.numbers_checkbox, 
             self.symbols_checkbox
         ]
-        
+
         for widget in widgets:
             print(f"Widget: {widget.__class__.__name__} - Width: {widget.width()} - Height: {widget.height()}")
