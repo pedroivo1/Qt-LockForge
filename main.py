@@ -13,7 +13,6 @@ class App(QApplication):
         self.timer.timeout.connect(self.check_theme_change)
         self.timer.start(200)
         self.previous_theme = self.get_current_theme()
-        self.set_theme()
 
     def get_current_theme(self):
         return "dark" if self.palette().color(QPalette.Window).lightness() < 128 else "light"
@@ -31,7 +30,7 @@ class App(QApplication):
             path = BASE_DIR / "src/config/light.xml"
         apply_stylesheet(self, theme=str(path))
 
-# para compilar
+# Para compilar
 if getattr(sys, 'frozen', False):
     BASE_DIR = Path(sys._MEIPASS)
 else:
@@ -39,6 +38,7 @@ else:
 
 if __name__ == '__main__':
     app = App(sys.argv)
+    app.set_theme()
 
     window = MainWindow()
     window.set_icon(app.get_current_theme(), BASE_DIR)

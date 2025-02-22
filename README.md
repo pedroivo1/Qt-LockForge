@@ -6,4 +6,6 @@ The files required to run the application are located in the **src** folder and 
 
 If you want to test the compiled code, download **LockForge.exe** and run it on your computer.
 
-<img src="img/screen%20v1.0.png" style="max-width: 700px;" />
+| **Light Theme** | **Dark Theme** |
+|-----------------|----------------|
+| ![Light Theme](img/screen-light%20v1.0.png) | ![Dark Theme](img/screen-dark%20v1.0.png) |

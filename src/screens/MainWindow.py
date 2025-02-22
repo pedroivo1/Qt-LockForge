@@ -1,11 +1,12 @@
 from PySide6.QtGui import QIcon, Qt
-from PySide6.QtWidgets import (QMainWindow, QVBoxLayout, QWidget, QApplication)
+from PySide6.QtWidgets import (QMainWindow, QVBoxLayout, QWidget)
 from .PasswordGeneratorWindow import PasswordGeneratorWindow
-from PySide6.QtGui import QAction
+from PySide6.QtGui import QFont
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
+        window_font = QFont()
         self.setWindowTitle('LockForge')
         self.set_position(0, 0)
 
@@ -15,10 +16,14 @@ class MainWindow(QMainWindow):
 
         password_generator_window = PasswordGeneratorWindow()
         main_layout.addWidget(password_generator_window)
-    
+
+        # self.setStyleSheet("""
+        #     QLabel, QSpinBox, QTextEdit, QPushButton, QCheckBox {
+        #         border: 2px solid red;
+        #     }
+        # """)
 
     def set_position(self, x, y):
-        screen = QApplication.primaryScreen()
         screen_geometry = self.screen().geometry()
         window_width = int(screen_geometry.width() * 0.5)
         window_height = int(screen_geometry.height() * 0.44)

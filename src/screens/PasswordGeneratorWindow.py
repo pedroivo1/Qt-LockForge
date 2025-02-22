@@ -1,18 +1,18 @@
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QLabel, QHBoxLayout,
     QSpinBox, QTextEdit, QPushButton, QCheckBox,
-    QMessageBox
-)
-from PySide6.QtCore import Qt, Slot, QTimer
+    QMessageBox)
+from PySide6.QtGui import QFont
+from PySide6.QtCore import Qt, Slot
 import random
 
 class PasswordGeneratorWindow(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.title_label = QLabel('Password Generator')
+        self.title_label = QLabel('PASSWORD GENERATOR')
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.title_label.setMaximumHeight(25)
+        self.title_label.setStyleSheet("font-weight: bold; font-size: 16px")
 
         self.char_count_selector = QSpinBox()
         self.char_count_selector.setRange(1, 1000)
@@ -60,7 +60,6 @@ class PasswordGeneratorWindow(QWidget):
         self.warning_label.setVisible(False)
         self.warning_label.setMaximumHeight(30)
 
-
     @Slot()
     def create_password(self):
         length = self.char_count_selector.value()
@@ -73,11 +72,26 @@ class PasswordGeneratorWindow(QWidget):
         if self.numbers_checkbox.isChecked():
             characters += '0123456789'
         if self.symbols_checkbox.isChecked():
-            characters += '!\"#$%&\'()*+,-./:;<=>?@[\]^_{|}~'  # retirei este simbolo: `
+            characters += '!\"#$%&\'()*+,-./:;<=>?@[\]^_{|}~'  # removed this symbol: `
 
         if not characters:
-            QMessageBox.information(self, "Empty Field", "Please, select an option.", QMessageBox.Ok, QMessageBox.Ok)
+            QMessageBox.information(self, "Empty Field", "Please select at least one option.", QMessageBox.Ok, QMessageBox.Ok)
             return
 
         password = ''.join(random.choices(characters, k=length))
         self.password_display.setPlainText(password)
+
+    def print_widget_sizes(self):
+        widgets = [
+            self.title_label, 
+            self.char_count_selector, 
+            self.password_display, 
+            self.generate_button, 
+            self.uppercase_checkbox, 
+            self.lowercase_checkbox, 
+            self.numbers_checkbox, 
+            self.symbols_checkbox
+        ]
+        
+        for widget in widgets:
+            print(f"Widget: {widget.__class__.__name__} - Width: {widget.width()} - Height: {widget.height()}")
