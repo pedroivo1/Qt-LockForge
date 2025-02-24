@@ -9,11 +9,11 @@ class MainWindow(QMainWindow):
         self.setWindowTitle('LockForge')
         self.set_position(0, 0)
 
-        self.setStyleSheet("""
-            *:focus {
-                background-color: #333333;  /* Cor de fundo quando em foco */
-            }
-        """)
+        # self.setStyleSheet("""
+        #     *:focus {
+        #         background-color: #333333;  /* Cor de fundo quando em foco */
+        #     }
+        # """)
 
 
         central_widget = QWidget()
@@ -21,8 +21,8 @@ class MainWindow(QMainWindow):
         main_layout = QVBoxLayout(central_widget)
         self.setCentralWidget(central_widget)
 
-        password_generator_window = PasswordGeneratorWindow()
-        main_layout.addWidget(password_generator_window)
+        self.password_generator_window = PasswordGeneratorWindow()
+        main_layout.addWidget(self.password_generator_window)
 
         # self.setStyleSheet("""
         #     QLabel, QSpinBox, QTextEdit, QPushButton, QCheckBox {
@@ -33,8 +33,7 @@ class MainWindow(QMainWindow):
     def set_position(self, x, y):
         screen_geometry = self.screen().geometry()
         window_width = int(screen_geometry.width() * 0.5)
-        window_height = int(screen_geometry.height() * 0.44)
-        self.resize(window_width, window_height)
+        self.setMinimumWidth(window_width)
         self.move(x, y)
 
     def set_icon(self, theme, BASE_DIR):

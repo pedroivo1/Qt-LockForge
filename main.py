@@ -43,5 +43,6 @@ if __name__ == '__main__':
     window = MainWindow()
     window.set_icon(app.get_current_theme(), BASE_DIR)
     window.show()
+    window.password_generator_window.print_widget_sizes()
 
     sys.exit(app.exec())

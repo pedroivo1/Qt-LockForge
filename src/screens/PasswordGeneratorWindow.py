@@ -1,7 +1,8 @@
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QLabel, QHBoxLayout,
     QSpinBox, QTextEdit, QPushButton, QCheckBox,
-    QMessageBox)
+    QMessageBox, QSizePolicy, QLineEdit
+)
 from PySide6.QtGui import QClipboard
 from PySide6.QtCore import Qt, Slot, QTimer
 import random
@@ -10,24 +11,44 @@ class PasswordGeneratorWindow(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        # Título
         self.title_label = QLabel('PASSWORD GENERATOR')
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.title_label.setStyleSheet("font-weight: bold; font-size: 16px")
+        self.title_label.setStyleSheet("font-weight: bold; font-size: 20px; max-height: 30px")
 
+        # Seleção de tamanho da senha
+        # self.char_count_label = QLabel('Password Size')
+        # self.char_count_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        # self.char_count_label.setStyleSheet("font-weight: bold;")
         self.char_count_selector = QSpinBox()
         self.char_count_selector.setRange(1, 1000)
         self.char_count_selector.setValue(10)
+        
 
-        self.password_display = QTextEdit()
+        # Display de senha
+        self.password_display = QLineEdit()
         self.password_display.setReadOnly(True)
         self.password_display.setFocusPolicy(Qt.NoFocus)
+        self.password_display.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.password_display.setMaximumHeight(82)
 
+        # Botão de copiar
         self.copy_button = QPushButton("Copy")
         self.copy_button.clicked.connect(self.copy_password)
+        self.copy_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.copy_button.setFocusPolicy(Qt.NoFocus)
 
+        # Botão para gerar senha
         self.generate_button = QPushButton("Create Password")
         self.generate_button.clicked.connect(self.create_password)
+        self.generate_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.generate_button.setFocusPolicy(Qt.NoFocus)
+        
 
+        # Checkboxes de opções
+        # self.check_box_label = QLabel('Used Characters')
+        # self.check_box_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        # self.check_box_label.setStyleSheet("font-weight: bold;")
         self.uppercase_checkbox = QCheckBox('ABC')
         self.uppercase_checkbox.setChecked(True)
         self.uppercase_checkbox.setFocusPolicy(Qt.NoFocus)
@@ -41,33 +62,36 @@ class PasswordGeneratorWindow(QWidget):
         self.symbols_checkbox.setChecked(True)
         self.symbols_checkbox.setFocusPolicy(Qt.NoFocus)
 
-        self.options_layout = QVBoxLayout()
-        self.options_layout.addWidget(self.copy_button)
-        self.options_layout.addWidget(self.char_count_selector)
-        self.options_layout.addWidget(self.uppercase_checkbox)
-        self.options_layout.addWidget(self.lowercase_checkbox)
-        self.options_layout.addWidget(self.numbers_checkbox)
-        self.options_layout.addWidget(self.symbols_checkbox)
+        # Layout de options
+        self.options_layout = QHBoxLayout()
+        self.options_layout.addWidget(self.char_count_selector, 1)
+        self.options_layout.addWidget(self.uppercase_checkbox, 1)
+        self.options_layout.addWidget(self.lowercase_checkbox, 1)
+        self.options_layout.addWidget(self.numbers_checkbox, 1)
+        self.options_layout.addWidget(self.symbols_checkbox, 1)
 
-        self.output_layout = QVBoxLayout()
-        self.output_layout.addWidget(self.password_display)
-        self.output_layout.addWidget(self.generate_button)
+        # Layout de botões de ação
+        self.action_buttons_layout = QVBoxLayout()
+        self.action_buttons_layout.addWidget(self.generate_button)
+        self.action_buttons_layout.addWidget(self.copy_button)
 
-        self.content_layout = QHBoxLayout()
-        self.content_layout.addLayout(self.output_layout)
+        # Layout principal do display de senha e botões
+        self.top_layout = QHBoxLayout()
+        self.top_layout.addLayout(self.action_buttons_layout)
+        self.top_layout.addWidget(self.password_display)
+
+        # Layout de conteúdo
+        self.content_layout = QVBoxLayout()
+        self.content_layout.addLayout(self.top_layout)
         self.content_layout.addLayout(self.options_layout)
 
+        # Layout principal
         self.main_layout = QVBoxLayout()
         self.main_layout.addWidget(self.title_label)
         self.main_layout.addLayout(self.content_layout)
 
+        # Definir o layout principal da janela
         self.setLayout(self.main_layout)
-
-        self.warning_label = QLabel('Select at least one option!')
-        self.warning_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.warning_label.setStyleSheet('background-color: yellow; font-size: 16px; color: red;')
-        self.warning_label.setVisible(False)
-        self.warning_label.setMaximumHeight(30)
 
     @Slot()
     def create_password(self):
@@ -81,21 +105,19 @@ class PasswordGeneratorWindow(QWidget):
         if self.numbers_checkbox.isChecked():
             characters += '0123456789'
         if self.symbols_checkbox.isChecked():
-            characters += '!\"#$%&\'()*+,-./:;<=>?@[\]^_{|}~'  # removed this symbol: `
+            characters += '!\"#$%&\'()*+,-./:;<=>?@[\]^_{|}~'
 
         if not characters:
             message = QMessageBox.information(self, "Empty Field", "Please select at least one option.", QMessageBox.Ok, QMessageBox.Ok)
             message.setFocusPolicy(Qt.NoFocus)
             return
 
-
         password = ''.join(random.choices(characters, k=length))
-        self.password_display.setPlainText(password)
-
+        self.password_display.setText(password)
 
     @Slot()
     def copy_password(self):
-        password = self.password_display.toPlainText()
+        password = self.password_display.text()
         clipboard = QClipboard(self)
         clipboard.setText(password)
         self.copy_button.setText('Copied')
